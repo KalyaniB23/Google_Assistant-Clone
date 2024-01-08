@@ -38,6 +38,7 @@ public class GoogleLens extends AppCompatActivity {
     private static final int STORAGE_REQUEST_CODE=400;
     private static final int IMAGE_PICK_GALLERY_CODE=1000;
     private static final int IMAGE_PICK_CAMERA_CODE=1001;
+    private static final int IMAGE_PICK_SELFIE_CODE = 1002;
     String[] cameraPermission;
     String[] storagePermission;
     EditText mResultEt;
@@ -85,30 +86,41 @@ public class GoogleLens extends AppCompatActivity {
     }
 
     private void shoeImageImportDialog() {
-        String[] items={"Camera","Gallery"};
+        String[] items={"Rear Camera", "Front Camera","Gallery"};
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
         dialog.setTitle("Select Image");
         dialog.setItems(items, (dialogInterface, which) -> {
-            if(which==0) {
-                if (!checkCameraPermission()) {
-                    requestCameraPermission();
-                }
-                else{
-                    pickCamera();
-                }
-            }
-
-            if (which==1){
-                if (!checkStoragePermission()) {
-                    requestStoragePermission();
-                }
-                else{
-                    pickGallery();
-                }
+            switch (which){
+                case 0:
+                    if (!checkCameraPermission()){
+                        requestCameraPermission();
+                    }else {
+                        pickCamera();
+                    }
+                    break;
+                case 1:
+                    if(!checkCameraPermission()){
+                        requestCameraPermission();
+                    }else{
+                        pickSelfieCamera();
+                    }
+                    break;
+                case 2:
+                    if(!checkStoragePermission()){
+                        requestStoragePermission();
+                    }else {
+                        pickGallery();
+                    }
+                    break;
             }
 
         });
         dialog.create().show();
+    }
+
+    private void pickSelfieCamera() {
+        Intent j = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(j, IMAGE_PICK_SELFIE_CODE);
     }
 
     private void pickCamera() {
@@ -188,10 +200,14 @@ public class GoogleLens extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == IMAGE_PICK_GALLERY_CODE) {
                 CropImage.activity(data.getData()).setGuidelines(CropImageView.Guidelines.ON).start(this);
+            } else if (requestCode == IMAGE_PICK_CAMERA_CODE || requestCode == IMAGE_PICK_SELFIE_CODE) {
+                CropImage.activity(image_uri).setGuidelines(CropImageView.Guidelines.ON).start(this);
+
             }
+        }
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
                 CropImage.activity(image_uri).setGuidelines(CropImageView.Guidelines.ON).start(this);
-            }
+
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
