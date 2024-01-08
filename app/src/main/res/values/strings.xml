@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">GoogleAssistant</string>
+    <string name="todo">TODO</string>
+    <string name="get_temperature_here">Get Temperature Here</string>
+    <string name="today">Today</string>
+    <string name="try_it_out">Try it out</string>
+    <string name="image_preview">Image Preview</string>
+    <string name="image">Image</string>
+    <string name="text_from_image">Text from image</string>
+    <string name="text_will_appear_here">Text will appear here</string>
+    <string name="search">Search</string>
+    <string name="OPEN_WEATHER_MAP_API_KEY" />
+    <string name="add_image">Add Image</string>
+</resources>
