@@ -239,6 +239,7 @@ class AssistantActivity : AppCompatActivity() {
                             keeper.contains("what is your name") || keeper.contains("your name") || keeper.contains("what do you call your self") || keeper.contains("who are you") -> speak("I am Google Assistant at  your service", textToSpeech, assistantViewModel, keeper)
                             keeper.contains("hello") || keeper.contains("hi") || keeper.contains("hey") || keeper.contains("hay") -> speak("Hello , how can I help you ?", textToSpeech, assistantViewModel, keeper)
                             else -> speak("Please try another comment like  what is your name , call someone , read my sms , open google lens , explore", textToSpeech, assistantViewModel, keeper)
+
                         }
                     }
                 }
