@@ -1,4 +1,4 @@
-package com.example.googleassistant.functions
+package com.example.googleassistantcloning.functions
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.hardware.Camera
 import android.hardware.camera2.CameraManager
 import android.media.Ringtone
 import android.net.Uri
@@ -27,6 +28,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.example.googleassistant.assistant.AssistantViewModel
 import com.example.googleassistant.utils.Utils.logKeeper
 import com.google.mlkit.vision.common.InputImage
@@ -54,7 +56,6 @@ class AssistantFunctions {
         var READCONTACTS = 6
         var CAPTUREPHOTO = 7
         var imageIndex: Int = 0
-        private val REQUEST_BLUETOOTH_PERMISSION = 1
         var REQUEST_CODE_SELECT_DOC: Int = 100
         var REQUEST_ENABLE_BT = 1000
         var questions: List<String> = listOf(" What would you name your boat if you had one? ",
@@ -149,10 +150,12 @@ class AssistantFunctions {
             intent.let { activity.startActivity(it) }
         }
 
+        fun messagingOnWhatsApp() {
+
+        }
         fun openWhatsAPP(activity: Activity) {
             val intent = activity.packageManager.getLaunchIntentForPackage("com.whatsapp")
             intent.let { activity.startActivity(it) }
-
         }
 
         fun openMessages(activity: Activity, context: Context) {
@@ -307,7 +310,6 @@ class AssistantFunctions {
                 val name = keeper.split("call").toTypedArray()[1].trim {
                     it <= ' '
                 }
-                Log.d("check", name)
                 try {
                     val phones: Cursor = activity.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)!!
                     while (phones.moveToNext()) {
@@ -315,7 +317,6 @@ class AssistantFunctions {
                         contactName=contactName.toLowerCase()
                         if (contactName.contains(name.toLowerCase())) {
                             number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                            Log.d("number", number)
                         }
                     }
                     phones.close()
@@ -332,12 +333,10 @@ class AssistantFunctions {
                             val dial = "tel:$number"
                             speak("Calling now", textToSpeech, assistantViewModel, keeper)
                             activity.startActivity(Intent(Intent.ACTION_CALL, Uri.parse(dial)))
-
                         }
                     } else {
                         speak("Wrong Contact Name", textToSpeech, assistantViewModel, keeper)
                     }
-
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Log.d("error in call", e.message.toString())
@@ -388,8 +387,6 @@ class AssistantFunctions {
             } else {
                 speak("Turn on Bluetooth to get paired devices", textToSpeech, assistantViewModel, keeper)
             }
-
-
         }
 
         fun turnOnFlash(cameraManager: CameraManager, cameraID: String, textToSpeech: TextToSpeech, assistantViewModel: AssistantViewModel, keeper: String) {
@@ -432,7 +429,7 @@ class AssistantFunctions {
             }
         }
 
-        fun capturePhoto(activity: Activity, context: Context, textToSpeech: TextToSpeech, assistantViewModel: AssistantViewModel, keeper: String) {
+        fun capturePhoto(activity: Activity, context: Context, textToSpeech: TextToSpeech, assistantViewModel: AssistantViewModel, keeper: String, useFrontCamera: Boolean = false) {
             if (ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.CAMERA) != PERMISSION_GRANTED) {
@@ -454,6 +451,13 @@ class AssistantFunctions {
                 }
                 val outputFileUri = Uri.fromFile(newFile)
                 val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+                if (useFrontCamera) {
+                    cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", Camera.CameraInfo.CAMERA_FACING_FRONT)
+                } else {
+                    cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", Camera.CameraInfo.CAMERA_FACING_BACK)
+                }
+
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri)
                 activity.startActivity(cameraIntent)
                 speak("Photo will be saved to $file", textToSpeech, assistantViewModel, keeper)
