@@ -9,17 +9,17 @@ import androidx.room.Update
 @Dao
 interface AssistantDao {
 
-    @Query("SELECT * FROM assistant_message_table WHERE assistantId=:key")
-    fun get(key : Long) : Assistant?
-
-    @Query("DELETE FROM assistant_message_table")
-    fun clear()
-
     @Insert
     fun insert(assistant: Assistant)
 
     @Update
     fun update(assistant: Assistant)
+
+    @Query("SELECT * FROM assistant_message_table WHERE assistantId=:key")
+    fun get(key : Long) : Assistant?
+
+    @Query("DELETE FROM assistant_message_table")
+    fun clear()
 
     @Query("SELECT * FROM assistant_message_table ORDER BY assistantId DESC")
     fun getAllMessages():LiveData<List<Assistant>>

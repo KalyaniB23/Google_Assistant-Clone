@@ -59,6 +59,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2")
     implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha06")
+    implementation("androidx.camera:camera-core:1.3.1")
     //noinspection LifecycleAnnotationProcessorWithJava8
     kapt("androidx.lifecycle:lifecycle-compiler:2.6.2")
     implementation("androidx.lifecycle:lifecycle-common-java8:2.6.2")
