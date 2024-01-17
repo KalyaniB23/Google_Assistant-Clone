@@ -1,4 +1,4 @@
-package com.example.googleassistantcloning.functions
+package com.example.googleassistant.functions
 
 import android.Manifest
 import android.annotation.SuppressLint
