@@ -7,7 +7,7 @@
     android:background="#fff">
 
     <TextView
-        android:id="@+id/assistant_msg"
+        android:id="@+id/human_msg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -25,7 +25,7 @@
         />
 
     <TextView
-        android:id="@+id/human_msg"
+        android:id="@+id/assistant_msg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -37,7 +37,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/assistant_msg"
+        app:layout_constraintTop_toBottomOf="@+id/human_msg"
         android:background="@drawable/human_message_background"
         android:padding="12dp"
         android:elevation="2dp"
