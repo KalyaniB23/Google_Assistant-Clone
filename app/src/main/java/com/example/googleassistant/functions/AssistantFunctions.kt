@@ -58,7 +58,8 @@ class AssistantFunctions {
         var imageIndex: Int = 0
         var REQUEST_CODE_SELECT_DOC: Int = 100
         var REQUEST_ENABLE_BT = 1000
-        var questions: List<String> = listOf(" What would you name your boat if you had one? ",
+        var questions: List<String> = listOf(
+            " What would you name your boat if you had one? ",
             "What's the closest thing to real magic?",
             "Who is the messiest person you know?",
             " What will finally break the internet? ",
@@ -150,9 +151,6 @@ class AssistantFunctions {
             intent.let { activity.startActivity(it) }
         }
 
-        fun messagingOnWhatsApp() {
-
-        }
         fun openWhatsAPP(activity: Activity) {
             val intent = activity.packageManager.getLaunchIntentForPackage("com.whatsapp")
             intent.let { activity.startActivity(it) }
@@ -186,6 +184,55 @@ class AssistantFunctions {
 
             }
 
+        }
+
+        fun extractAndSendMessage(activity: Activity, textToSpeech: TextToSpeech, assistantViewModel: AssistantViewModel, keeper: String) {
+            val regex = Regex("send message on WhatsApp\\s+(.+)\\s+to\\s+(.+)")
+            val matchResult = regex.find(keeper)
+
+            if (matchResult != null && matchResult.groupValues.size == 3) {
+                val message = matchResult.groupValues[1]
+                val contactName = matchResult.groupValues[2]
+                val contactNumber = getContactNumber(activity, contactName)
+                if (contactNumber.isNotEmpty()) {
+                    openWhatsAppWithMessage(activity, contactNumber, message)
+                } else {
+                    speak("Contact not found", textToSpeech, assistantViewModel, keeper)
+                }
+            } else {
+                speak("Invalid input format", textToSpeech, assistantViewModel, keeper)
+            }
+        }
+
+        private fun openWhatsAppWithMessage(activity: Activity, contactNumber: String, message: String) : Boolean {
+            val intent = Intent(Intent.ACTION_VIEW)
+
+            val uri = "whatsapp://send?phone=$contactNumber"
+
+            intent.data = Uri.parse("$uri&text=${Uri.encode(message)}")
+
+            return if (intent.resolveActivity(activity.packageManager) != null) {
+                activity.startActivity(intent)
+                true
+            } else {
+                false
+            }
+        }
+
+        @SuppressLint("Range")
+        private fun getContactNumber(activity: Activity, name: String): String {
+            var number = ""
+            val phones: Cursor = activity.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)!!
+
+            while (phones.moveToNext()) {
+                val contactName: String = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).toLowerCase()
+                if (contactName.contains(name.toLowerCase())) {
+                    number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    break
+                }
+            }
+            phones.close()
+            return number
         }
 
         fun shareAFile(activity: Activity, context: Context) {
