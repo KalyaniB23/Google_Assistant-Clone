@@ -45,6 +45,7 @@ import com.example.googleassistant.functions.AssistantFunctions.Companion.callCo
 import com.example.googleassistant.functions.AssistantFunctions.Companion.capturePhoto
 import com.example.googleassistant.functions.AssistantFunctions.Companion.clipBoardCopy
 import com.example.googleassistant.functions.AssistantFunctions.Companion.clipBoardSpeak
+import com.example.googleassistant.functions.AssistantFunctions.Companion.extractAndSendMessage
 import com.example.googleassistant.functions.AssistantFunctions.Companion.getAllPairedDevices
 import com.example.googleassistant.functions.AssistantFunctions.Companion.getDate
 import com.example.googleassistant.functions.AssistantFunctions.Companion.getTextFromBitmap
@@ -217,6 +218,7 @@ class AssistantActivity : AppCompatActivity() {
                             keeper.contains("open youtube") || keeper.contains("open YouTube") -> openYoutube(this@AssistantActivity)
                             keeper.contains("share file") -> shareAFile(this@AssistantActivity, applicationContext)
                             keeper.contains("share a text message") -> shareATextMessage(this@AssistantActivity, applicationContext, textToSpeech, assistantViewModel, keeper)
+                            keeper.contains("send message on WhatsApp") -> extractAndSendMessage(this@AssistantActivity , textToSpeech, assistantViewModel, keeper)
                             keeper.contains("call") -> callContact(this@AssistantActivity, textToSpeech, assistantViewModel, keeper)
                             keeper.contains("turn on bluetooth") || keeper.contains("turn on Bluetooth") -> turnOnBluetooth(this@AssistantActivity, textToSpeech, assistantViewModel, keeper)
                             keeper.contains("turn off bluetooth") || keeper.contains("turn off Bluetooth") -> turnOffBluetooth(textToSpeech, assistantViewModel, keeper)
